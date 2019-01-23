@@ -42,7 +42,7 @@ namespace AVRUtil::detail
 	//
 	//-------------------------------------------------------------------
 	template <unsigned PORT, unsigned NUM>
-	inline void set_to(bool&& bit) {
+	inline void set_to(bool bit) {
 		if (bit)
 			sbi <PORT, NUM>();
 		else
@@ -78,6 +78,11 @@ namespace AVRUtil
         static void set()
         {
             detail::sbi <Descriptor::port, Descriptor::num>();
+        }
+
+        static void setTo(bool bit)
+        {
+            detail::set_to <Descriptor::port, Descriptor::num>(bit);
         }
 
         static void reset()
@@ -141,6 +146,15 @@ namespace AVRUtil
         static void reset()
         {
             (List::reset(), ...);
+        }
+    };
+
+    template <typename... List>
+    struct OmniPinList : PinList <List...>
+    {
+        static void setInput()
+        {
+            (List::setInput(), ...);
         }
     };
 
